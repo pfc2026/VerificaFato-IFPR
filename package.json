@@ -1,0 +1,42 @@
+{
+  "name": "verificafato",
+  "version": "2.0.0",
+  "description": "Verificação de afirmações com evidências, coleta regional e análise de linguagem",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "collect": "node scraper/coleta.js",
+    "check": "node scripts/check.js"
+  },
+  "keywords": [
+    "fact-check",
+    "parana",
+    "nlp"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "bcryptjs": "^3.0.3",
+    "cheerio": "^1.1.2",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "ipaddr.js": "^2.2.0",
+    "mongodb": "^7.3.0",
+    "mongoose": "^9.11.4",
+    "robots-parser": "^3.0.1",
+    "sanitize-html": "2.18.1",
+    "zod": "^4.1.0"
+  },
+  "overrides": {
+    "sanitize-html": {
+      "htmlparser2": "10.1.0"
+    }
+  }
+}

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar / Cadastrar — VerificaFato</title>
+    <meta name="robots" content="noindex, follow">
+    <meta name="referrer" content="no-referrer">
+    <link rel="icon" type="image/png" href="/html/img/Logo%20oficial.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .auth-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 480px;
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-logo .auth-logo-badge {
+            width: 68px; height: 68px;
+            padding: 7px;
+            background: #f5f9f6;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 0.85rem;
+        }
+        .auth-logo h1 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+        .auth-logo p  { font-size: 0.85rem; opacity: 0.7; margin: 0.25rem 0 0; }
+
+        .auth-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.15);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 2rem;
+            gap: 4px;
+        }
+        .auth-tab-btn {
+            flex: 1; padding: 0.6rem;
+            background: transparent; border: none;
+            color: var(--text-muted); border-radius: 9px;
+            font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .auth-tab-btn.active {
+            background: linear-gradient(135deg, #27AE60, #229954);
+            color: #fff;
+        }
+
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+
+        .field-auth { margin-bottom: 1.25rem; }
+        .field-auth label {
+            display: block; font-size: 0.85rem; font-weight: 600;
+            margin-bottom: 0.4rem; opacity: 0.9;
+        }
+        .field-auth .input-icon-wrap {
+            position: relative;
+        }
+        .field-auth .input-icon-wrap i {
+            position: absolute; left: 0.9rem; top: 50%;
+            transform: translateY(-50%); opacity: 0.5; font-size: 0.9rem;
+        }
+        .field-auth input {
+            width: 100%; padding: 0.75rem 3rem 0.75rem 2.5rem;
+            background: rgba(255,255,255,0.1) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 10px !important;
+            color: var(--text-main) !important;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .field-auth input:focus {
+            outline: none;
+            border-color: #27AE60 !important;
+            box-shadow: 0 0 0 3px rgba(39,174,96,0.2) !important;
+        }
+        .field-auth input::placeholder { color: var(--text-muted) !important; }
+
+        .btn-auth {
+            width: 100%; padding: 0.85rem;
+            background: linear-gradient(135deg, #27AE60, #229954);
+            border: none; border-radius: 12px;
+            color: #fff; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all 0.25s;
+            margin-top: 0.5rem;
+        }
+        .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(39,174,96,0.4); }
+        .btn-auth:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+
+        .divider { text-align: center; margin: 1rem 0; opacity: 0.5; font-size: 0.8rem; }
+
+        .msg-box {
+            padding: 0.75rem 1rem; border-radius: 10px;
+            font-size: 0.85rem; margin-bottom: 1rem; display: none;
+        }
+        .msg-box.error   { background: rgba(231,76,60,0.2); border: 1px solid rgba(231,76,60,0.4); color: #ff7675; }
+        .msg-box.success { background: rgba(39,174,96,0.2); border: 1px solid rgba(39,174,96,0.4); color: #55efc4; }
+        .msg-box.show    { display: block; }
+
+        .back-home { display: block; text-align: center; margin-top: 1.5rem; font-size: 0.85rem; opacity: 0.65; transition: opacity 0.2s; }
+        .back-home:hover { opacity: 1; }
+
+        .pwd-toggle {
+            position: absolute; right: 0.2rem; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: var(--text-muted); cursor: pointer;
+            padding: 0; font-size: 0.85rem; width: 44px; height: 44px;
+        }
+        .field-auth .input-icon-wrap .pwd-toggle i { position: static; transform: none; opacity: 1; }
+    </style>
+</head>
+<body>
+    <div id="alertContainer" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:2000;" aria-live="polite"></div>
+
+    <header class="site-header">
+        <div class="container header-shell">
+            <a class="brand-link" href="/" aria-label="VerificaFato — início">
+                <span class="brand-mark" aria-hidden="true"><img src="/html/img/Logo%20oficial.png" alt="" class="brand-mark-image"></span>
+                <span>VerificaFato</span>
+            </a>
+            <div id="theme-toggle-container" class="theme-toggle-inline ms-auto"></div>
+        </div>
+    </header>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-badge">
+                    <img src="/html/img/Logo%20oficial.png" alt="Logo do VerificaFato" class="auth-logo-image">
+                </div>
+                <h1>VerificaFato</h1>
+                <p>Combatendo a desinformação</p>
+            </div>
+
+            <div class="auth-tabs" role="group" aria-label="Acesso à conta">
+                <button class="auth-tab-btn active" id="tabEntrar" data-login-tab="entrar">
+                    <i class="fas fa-sign-in-alt me-1"></i> Entrar
+                </button>
+                <button class="auth-tab-btn" id="tabCadastrar" data-login-tab="cadastrar">
+                    <i class="fas fa-user-plus me-1"></i> Cadastrar
+                </button>
+            </div>
+
+            <!-- ── ENTRAR ── -->
+            <div id="panelEntrar" class="form-panel active">
+                <div id="msgEntrar" class="msg-box" role="status" aria-live="polite"></div>
+                <div class="field-auth">
+                    <label for="loginEmail">E-mail</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email">
+                    </div>
+                </div>
+                <div class="field-auth">
+                    <label for="loginSenha">Senha</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginSenha" placeholder="••••••••" autocomplete="current-password">
+                        <button type="button" class="pwd-toggle" data-toggle-password="loginSenha" aria-label="Mostrar senha" aria-controls="loginSenha" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <button class="btn-auth" id="btnEntrar">
+                    <span class="btn-text"><i class="fas fa-sign-in-alt me-2"></i>Entrar</span>
+                    <span class="d-none spinner-border spinner-border-sm" id="spinEntrar"></span>
+                </button>
+                <p class="text-center mt-3"><a href="#recuperar" data-login-tab="recuperar">Esqueci minha senha</a></p>
+                <p class="divider">— ou —</p>
+                <p style="text-align:center;font-size:0.85rem;opacity:0.7">Não tem conta? <a href="#" data-login-tab="cadastrar" style="color:#27AE60;font-weight:600">Cadastre-se grátis</a></p>
+            </div>
+
+            <!-- ── CADASTRAR ── -->
+            <div id="panelCadastrar" class="form-panel">
+                <div id="msgCadastrar" class="msg-box" role="status" aria-live="polite"></div>
+                <div class="field-auth">
+                    <label for="cadNome">Nome completo</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="cadNome" placeholder="Seu nome" autocomplete="name">
+                    </div>
+                </div>
+                <div class="field-auth">
+                    <label for="cadEmail">E-mail</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="cadEmail" placeholder="seu@email.com" autocomplete="email">
+                    </div>
+                </div>
+                <div class="field-auth">
+                    <label for="cadCidade">Cidade <span style="font-weight:400;opacity:0.6;font-size:0.8rem">(opcional)</span></label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-map-pin"></i>
+                        <input type="text" id="cadCidade" placeholder="Ex.: Cascavel" autocomplete="address-level2">
+                    </div>
+                </div>
+                <div class="field-auth">
+                    <label for="cadSenha">Senha <span style="font-weight:400;opacity:0.6;font-size:0.8rem">(mín. 12 caracteres; máx. 72 bytes)</span></label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="cadSenha" placeholder="Pelo menos 12 caracteres" autocomplete="new-password" minlength="12" maxlength="72" required>
+                        <button type="button" class="pwd-toggle" data-toggle-password="cadSenha" aria-label="Mostrar senha" aria-controls="cadSenha" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div class="field-auth">
+                    <label for="cadSenha2">Confirmar senha</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="cadSenha2" placeholder="Repita a senha" autocomplete="new-password" minlength="12" maxlength="72" required>
+                        <button type="button" class="pwd-toggle" data-toggle-password="cadSenha2" aria-label="Mostrar senha" aria-controls="cadSenha2" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <button class="btn-auth" id="btnCadastrar">
+                    <span class="btn-text"><i class="fas fa-user-plus me-2"></i>Criar conta</span>
+                    <span class="d-none spinner-border spinner-border-sm" id="spinCadastrar"></span>
+                </button>
+                <p class="divider">— ou —</p>
+                <p style="text-align:center;font-size:0.85rem;opacity:0.7">Já tem conta? <a href="#" data-login-tab="entrar" style="color:#27AE60;font-weight:600">Entrar</a></p>
+            </div>
+
+            <div id="panelRecuperar" class="form-panel">
+                <h2 class="h5">Recuperar senha</h2>
+                <p class="small">Informe o e-mail da sua conta. Você receberá um link de uso único, válido por 30 minutos. Confira também a caixa de spam.</p>
+                <div id="msgRecuperar" class="msg-box" role="status" aria-live="polite"></div>
+                <div class="field-auth"><label for="recEmail">E-mail da conta</label><div class="input-icon-wrap"><i class="fas fa-envelope" aria-hidden="true"></i><input type="email" id="recEmail" autocomplete="email" placeholder="seu@email.com" required></div></div>
+                <button type="button" class="btn-auth" id="btnRecuperar"><span class="btn-text">Enviar link de recuperação</span><span class="d-none spinner-border spinner-border-sm" id="spinRecuperar" aria-hidden="true"></span></button>
+                <p class="text-center mt-3"><a href="#entrar" data-login-tab="entrar">Voltar para entrar</a></p>
+            </div>
+            <div id="panelRedefinir" class="form-panel">
+                <h2 class="h5">Escolha uma nova senha</h2>
+                <p class="small" id="resetPasswordHelp">Use pelo menos 12 caracteres e até 72 bytes. Ao redefinir, as sessões anteriores serão encerradas.</p>
+                <div id="msgRedefinir" class="msg-box" role="status" aria-live="polite"></div>
+                <div class="field-auth"><label for="resetSenha">Nova senha</label><div class="input-icon-wrap"><i class="fas fa-lock" aria-hidden="true"></i><input type="password" id="resetSenha" autocomplete="new-password" minlength="12" maxlength="72" aria-describedby="resetPasswordHelp" required><button type="button" class="pwd-toggle" data-toggle-password="resetSenha" aria-label="Mostrar senha" aria-controls="resetSenha" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button></div></div>
+                <div class="field-auth"><label for="resetSenha2">Confirmar nova senha</label><div class="input-icon-wrap"><i class="fas fa-lock" aria-hidden="true"></i><input type="password" id="resetSenha2" autocomplete="new-password" minlength="12" maxlength="72" required><button type="button" class="pwd-toggle" data-toggle-password="resetSenha2" aria-label="Mostrar senha" aria-controls="resetSenha2" aria-pressed="false"><i class="fas fa-eye" aria-hidden="true"></i></button></div></div>
+                <button type="button" class="btn-auth" id="btnRedefinir"><span class="btn-text">Salvar nova senha</span><span class="d-none spinner-border spinner-border-sm" id="spinRedefinir" aria-hidden="true"></span></button>
+                <p class="text-center mt-3"><a href="#recuperar" data-login-tab="recuperar">Solicitar outro link</a></p>
+            </div>
+            <p class="small text-center mt-4">Ao criar sua conta, conheça o <a href="/html/Privacidade.html">uso dos seus dados</a>.</p>
+            <a href="/" class="back-home"><i class="fas fa-arrow-left me-1"></i> Voltar à verificação</a>
+            <p class="small text-center mt-3"><a href="/html/Privacidade.html#responsaveis">Responsáveis e contato</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/dark-mode.js"></script>
+    <script type="module" src="/js/login.js"></script>
+</body>
+</html>
